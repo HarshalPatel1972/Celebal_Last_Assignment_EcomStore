@@ -1,36 +1,65 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ShoppingCart, Heart, User, Star, Grid, List, Plus, Minus, X, Menu, Filter } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { Slider } from "@/components/ui/slider"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsContent } from "@/components/ui/tabs"
-import Image from "next/image"
+import { useState, useEffect } from "react";
+import {
+  ShoppingCart,
+  Heart,
+  User,
+  Star,
+  Grid,
+  List,
+  Plus,
+  Minus,
+  X,
+  Menu,
+  Filter,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import Image from "next/image";
 
 // Import new components
-import { ToastProvider, useToast } from "@/components/toast-provider"
-import { OrderConfirmation } from "@/components/order-confirmation"
-import { SearchSuggestions } from "@/components/search-suggestions"
-import { useCartPersistence } from "@/hooks/use-cart-persistence"
+import { ToastProvider, useToast } from "@/components/toast-provider";
+import { OrderConfirmation } from "@/components/order-confirmation";
+import { SearchSuggestions } from "@/components/search-suggestions";
+import { useCartPersistence } from "@/hooks/use-cart-persistence";
 
-import { AuthProvider, useAuth } from "@/contexts/auth-context"
-import { LoginDialog } from "@/components/auth/login-dialog"
-import { RegisterDialog } from "@/components/auth/register-dialog"
-import { UserProfile } from "@/components/auth/user-profile"
+import { AuthProvider, useAuth } from "@/contexts/auth-context";
+import { LoginDialog } from "@/components/auth/login-dialog";
+import { RegisterDialog } from "@/components/auth/register-dialog";
+import { UserProfile } from "@/components/auth/user-profile";
 
-import { PaymentProvider } from "@/contexts/payment-context"
-import { PaymentGateway } from "@/components/payment/payment-gateway"
-import { PaymentHistory } from "@/components/payment/payment-history"
+import { PaymentProvider } from "@/contexts/payment-context";
+import { PaymentGateway } from "@/components/payment/payment-gateway";
+import { PaymentHistory } from "@/components/payment/payment-history";
 
 // Sample product data with Indian pricing and REAL IMAGES
 const products = [
@@ -42,7 +71,8 @@ const products = [
     discount: 10,
     rating: 4.8,
     reviews: 2847,
-    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
     category: "Smartphones",
     brand: "Apple",
     inStock: true,
@@ -57,12 +87,18 @@ const products = [
     discount: 8,
     rating: 4.9,
     reviews: 1523,
-    image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop",
     category: "Laptops",
     brand: "Apple",
     inStock: true,
     description: "Ultra-thin laptop with M2 chip and all-day battery",
-    features: ["M2 Chip", "18-hour battery", "13.6-inch display", "1080p Camera"],
+    features: [
+      "M2 Chip",
+      "18-hour battery",
+      "13.6-inch display",
+      "1080p Camera",
+    ],
   },
   {
     id: 3,
@@ -72,12 +108,18 @@ const products = [
     discount: 14,
     rating: 4.7,
     reviews: 3421,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
     category: "Electronics",
     brand: "Sony",
     inStock: true,
     description: "Industry-leading noise canceling headphones",
-    features: ["Active Noise Canceling", "30-hour battery", "Quick Charge", "Multipoint Connection"],
+    features: [
+      "Active Noise Canceling",
+      "30-hour battery",
+      "Quick Charge",
+      "Multipoint Connection",
+    ],
   },
   {
     id: 4,
@@ -87,12 +129,18 @@ const products = [
     discount: 9,
     rating: 4.6,
     reviews: 892,
-    image: "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=400&fit=crop",
     category: "Electronics",
     brand: "Canon",
     inStock: true,
     description: "Professional mirrorless camera with 4K video",
-    features: ["20.1MP Sensor", "4K Video", "In-body Stabilization", "Dual Pixel AF"],
+    features: [
+      "20.1MP Sensor",
+      "4K Video",
+      "In-body Stabilization",
+      "Dual Pixel AF",
+    ],
   },
   {
     id: 5,
@@ -102,12 +150,18 @@ const products = [
     discount: 31,
     rating: 4.5,
     reviews: 1876,
-    image: "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop",
     category: "Electronics",
     brand: "Razer",
     inStock: true,
     description: "RGB mechanical keyboard for gaming enthusiasts",
-    features: ["Mechanical Switches", "RGB Lighting", "Programmable Keys", "Gaming Mode"],
+    features: [
+      "Mechanical Switches",
+      "RGB Lighting",
+      "Programmable Keys",
+      "Gaming Mode",
+    ],
   },
   {
     id: 6,
@@ -117,12 +171,18 @@ const products = [
     discount: 38,
     rating: 4.3,
     reviews: 2341,
-    image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop",
     category: "Electronics",
     brand: "Belkin",
     inStock: true,
     description: "Fast wireless charging for all Qi-enabled devices",
-    features: ["15W Fast Charging", "LED Indicator", "Case Compatible", "Safety Features"],
+    features: [
+      "15W Fast Charging",
+      "LED Indicator",
+      "Case Compatible",
+      "Safety Features",
+    ],
   },
   {
     id: 7,
@@ -132,12 +192,18 @@ const products = [
     discount: 11,
     rating: 4.6,
     reviews: 1987,
-    image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop",
     category: "Smartphones",
     brand: "Samsung",
     inStock: true,
     description: "Latest Galaxy with AI-powered photography",
-    features: ["AI Photography", "120Hz Display", "5000mAh Battery", "S Pen Support"],
+    features: [
+      "AI Photography",
+      "120Hz Display",
+      "5000mAh Battery",
+      "S Pen Support",
+    ],
   },
   {
     id: 8,
@@ -147,12 +213,18 @@ const products = [
     discount: 9,
     rating: 4.4,
     reviews: 1234,
-    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop",
     category: "Laptops",
     brand: "Dell",
     inStock: true,
     description: "Ultra-portable laptop with InfinityEdge display",
-    features: ["InfinityEdge Display", "Intel Core i7", "16GB RAM", "512GB SSD"],
+    features: [
+      "InfinityEdge Display",
+      "Intel Core i7",
+      "16GB RAM",
+      "512GB SSD",
+    ],
   },
   {
     id: 9,
@@ -162,7 +234,8 @@ const products = [
     discount: 33,
     rating: 4.2,
     reviews: 5432,
-    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop",
     category: "Electronics",
     brand: "Boat",
     inStock: true,
@@ -177,7 +250,8 @@ const products = [
     discount: 20,
     rating: 4.5,
     reviews: 3210,
-    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop",
     category: "Electronics",
     brand: "Xiaomi",
     inStock: true,
@@ -192,12 +266,18 @@ const products = [
     discount: 29,
     rating: 4.1,
     reviews: 2876,
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
     category: "Electronics",
     brand: "Realme",
     inStock: true,
     description: "Fitness tracker with heart rate monitoring",
-    features: ["Heart Rate Monitor", "Sleep Tracking", "14-day Battery", "Water Resistant"],
+    features: [
+      "Heart Rate Monitor",
+      "Sleep Tracking",
+      "14-day Battery",
+      "Water Resistant",
+    ],
   },
   {
     id: 12,
@@ -207,14 +287,15 @@ const products = [
     discount: 20,
     rating: 4.4,
     reviews: 1654,
-    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
     category: "Electronics",
     brand: "JBL",
     inStock: true,
     description: "Portable speaker with powerful bass and waterproof design",
     features: ["Waterproof", "12-hour Battery", "JBL Bass", "Bluetooth 5.1"],
   },
-]
+];
 
 const categories = [
   { name: "All", icon: "🛍️", count: 1234 },
@@ -226,9 +307,21 @@ const categories = [
   { name: "Books", icon: "📚", count: 2341 },
   { name: "Beauty", icon: "💄", count: 678 },
   { name: "Sports", icon: "⚽", count: 456 },
-]
+];
 
-const brands = ["Apple", "Samsung", "Sony", "Canon", "Dell", "Xiaomi", "Boat", "JBL", "Realme", "Razer", "Belkin"]
+const brands = [
+  "Apple",
+  "Samsung",
+  "Sony",
+  "Canon",
+  "Dell",
+  "Xiaomi",
+  "Boat",
+  "JBL",
+  "Realme",
+  "Razer",
+  "Belkin",
+];
 
 const navItems = [
   { name: "Home", href: "#home" },
@@ -236,10 +329,10 @@ const navItems = [
   { name: "Offers", href: "#offers" },
   { name: "About", href: "#about" },
   { name: "Contact", href: "#contact" },
-]
+];
 
 function EliteCartIndiaContent() {
-  const { addToast } = useToast()
+  const { addToast } = useToast();
   const {
     cartItems,
     wishlist,
@@ -249,66 +342,69 @@ function EliteCartIndiaContent() {
     updateQuantity,
     clearCart,
     toggleWishlist: toggleWishlistPersistent,
-  } = useCartPersistence()
+  } = useCartPersistence();
 
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [isCartOpen, setIsCartOpen] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string>("All")
-  const [priceRange, setPriceRange] = useState([500, 50000])
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
-  const [minRating, setMinRating] = useState(0)
-  const [inStockOnly, setInStockOnly] = useState(false)
-  const [sortBy, setSortBy] = useState("featured")
-  const [filteredProducts, setFilteredProducts] = useState(products)
-  const [checkoutStep, setCheckoutStep] = useState(1)
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<any>(null)
-  const [isProductModalOpen, setIsProductModalOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("home")
-  const [showFilters, setShowFilters] = useState(false)
-  const [showOrderConfirmation, setShowOrderConfirmation] = useState(false)
-  const [orderData, setOrderData] = useState<any>(null)
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [priceRange, setPriceRange] = useState([500, 50000]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [minRating, setMinRating] = useState(0);
+  const [inStockOnly, setInStockOnly] = useState(false);
+  const [sortBy, setSortBy] = useState("featured");
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [checkoutStep, setCheckoutStep] = useState(1);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const [showFilters, setShowFilters] = useState(false);
+  const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
+  const [orderData, setOrderData] = useState<any>(null);
 
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false)
-  const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const { user, isAuthenticated, logout } = useAuth()
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false)
-  const [isPaymentHistoryOpen, setIsPaymentHistoryOpen] = useState(false)
-  const [paymentDetails, setPaymentDetails] = useState<any>(null)
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [isPaymentHistoryOpen, setIsPaymentHistoryOpen] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState<any>(null);
 
   const heroSlides = [
     {
       title: "India's Premium Shopping Destination",
       subtitle: "Upto 70% Off on Electronics",
-      image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop",
       gradient: "from-purple-900 via-blue-900 to-indigo-900",
     },
     {
       title: "Latest Smartphones & Gadgets",
       subtitle: "Free Delivery Across India",
-      image: "https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?w=800&h=500&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?w=800&h=500&fit=crop",
       gradient: "from-orange-900 via-red-900 to-pink-900",
     },
     {
       title: "Premium Electronics Collection",
       subtitle: "Exclusive Deals Just for You",
-      image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=500&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=500&fit=crop",
       gradient: "from-green-900 via-teal-900 to-blue-900",
     },
-  ]
+  ];
 
   // Auto-slide hero banner
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [])
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Filter products
   useEffect(() => {
@@ -316,99 +412,122 @@ function EliteCartIndiaContent() {
       const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesCategory = selectedCategory === "All" || product.category === selectedCategory
-      const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
-      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand)
-      const matchesRating = product.rating >= minRating
-      const matchesStock = !inStockOnly || product.inStock
+        product.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory =
+        selectedCategory === "All" || product.category === selectedCategory;
+      const matchesPrice =
+        product.price >= priceRange[0] && product.price <= priceRange[1];
+      const matchesBrand =
+        selectedBrands.length === 0 || selectedBrands.includes(product.brand);
+      const matchesRating = product.rating >= minRating;
+      const matchesStock = !inStockOnly || product.inStock;
 
-      return matchesSearch && matchesCategory && matchesPrice && matchesBrand && matchesRating && matchesStock
-    })
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesPrice &&
+        matchesBrand &&
+        matchesRating &&
+        matchesStock
+      );
+    });
 
     // Sort products
     switch (sortBy) {
       case "price-low":
-        filtered.sort((a, b) => a.price - b.price)
-        break
+        filtered.sort((a, b) => a.price - b.price);
+        break;
       case "price-high":
-        filtered.sort((a, b) => b.price - a.price)
-        break
+        filtered.sort((a, b) => b.price - a.price);
+        break;
       case "rating":
-        filtered.sort((a, b) => b.rating - a.rating)
-        break
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
       case "newest":
         // Keep original order for newest
-        break
+        break;
       default:
         // Featured - keep original order
-        break
+        break;
     }
 
-    setFilteredProducts(filtered)
-  }, [searchQuery, selectedCategory, priceRange, selectedBrands, minRating, inStockOnly, sortBy])
+    setFilteredProducts(filtered);
+  }, [
+    searchQuery,
+    selectedCategory,
+    priceRange,
+    selectedBrands,
+    minRating,
+    inStockOnly,
+    sortBy,
+  ]);
 
   const addToCart = (product: any) => {
-    addToCartPersistent(product)
+    addToCartPersistent(product);
     addToast({
       type: "success",
       title: "Added to Cart!",
       description: `${product.name} has been added to your cart.`,
       duration: 3000,
-    })
-  }
+    });
+  };
 
   const toggleWishlist = (productId: number) => {
-    const product = products.find((p) => p.id === productId)
-    const isInWishlist = wishlist.includes(productId)
+    const product = products.find((p) => p.id === productId);
+    const isInWishlist = wishlist.includes(productId);
 
-    toggleWishlistPersistent(productId)
+    toggleWishlistPersistent(productId);
 
     if (product) {
       addToast({
         type: isInWishlist ? "info" : "success",
         title: isInWishlist ? "Removed from Wishlist" : "Added to Wishlist!",
-        description: `${product.name} has been ${isInWishlist ? "removed from" : "added to"} your wishlist.`,
+        description: `${product.name} has been ${
+          isInWishlist ? "removed from" : "added to"
+        } your wishlist.`,
         duration: 3000,
-      })
+      });
     }
-  }
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
       maximumFractionDigits: 0,
-    }).format(price)
-  }
+    }).format(price);
+  };
 
-  const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const gst = cartTotal * 0.18
-  const deliveryCharges = cartTotal > 99900 ? 0 : 99
-  const finalTotal = cartTotal + gst + deliveryCharges
+  const cartTotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const gst = cartTotal * 0.18;
+  const deliveryCharges = cartTotal > 99900 ? 0 : 99;
+  const finalTotal = cartTotal + gst + deliveryCharges;
 
   const clearFilters = () => {
-    setSelectedCategory("All")
-    setPriceRange([500, 50000])
-    setSelectedBrands([])
-    setMinRating(0)
-    setInStockOnly(false)
-    setSearchQuery("")
-  }
+    setSelectedCategory("All");
+    setPriceRange([500, 50000]);
+    setSelectedBrands([]);
+    setMinRating(0);
+    setInStockOnly(false);
+    setSearchQuery("");
+  };
 
   const scrollToSection = (sectionId: string) => {
-    setActiveSection(sectionId)
-    const element = document.getElementById(sectionId)
+    setActiveSection(sectionId);
+    const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      element.scrollIntoView({ behavior: "smooth" });
     }
-    setIsMobileMenuOpen(false)
-  }
+    setIsMobileMenuOpen(false);
+  };
 
   const openProductModal = (product: any) => {
-    setSelectedProduct(product)
-    setIsProductModalOpen(true)
-  }
+    setSelectedProduct(product);
+    setIsProductModalOpen(true);
+  };
 
   const handleOrderPlacement = () => {
     if (!isAuthenticated) {
@@ -416,13 +535,13 @@ function EliteCartIndiaContent() {
         type: "warning",
         title: "Login Required",
         description: "Please login to place your order.",
-      })
-      setIsLoginOpen(true)
-      return
+      });
+      setIsLoginOpen(true);
+      return;
     }
 
     // Generate order data
-    const orderId = `EC${Date.now().toString().slice(-8)}`
+    const orderId = `EC${Date.now().toString().slice(-8)}`;
 
     const newPaymentDetails = {
       method: "upi" as const,
@@ -442,21 +561,24 @@ function EliteCartIndiaContent() {
             pincode: user.addresses[0].pincode,
           }
         : undefined,
-    }
+    };
 
-    setPaymentDetails(newPaymentDetails)
-    setIsCheckoutOpen(false)
-    setIsPaymentOpen(true)
-  }
+    setPaymentDetails(newPaymentDetails);
+    setIsCheckoutOpen(false);
+    setIsPaymentOpen(true);
+  };
 
   const handlePaymentSuccess = (transactionId: string) => {
-    const orderId = paymentDetails?.orderId || `EC${Date.now().toString().slice(-8)}`
-    const estimatedDelivery = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString("en-IN", {
+    const orderId =
+      paymentDetails?.orderId || `EC${Date.now().toString().slice(-8)}`;
+    const estimatedDelivery = new Date(
+      Date.now() + 5 * 24 * 60 * 60 * 1000
+    ).toLocaleDateString("en-IN", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
+    });
 
     const newOrderData = {
       orderId,
@@ -469,26 +591,28 @@ function EliteCartIndiaContent() {
         name: user?.name || "Guest User",
         email: user?.email || "guest@example.com",
         phone: user?.phone || "+91 98765 43210",
-        address: user?.addresses?.[0]?.address || "123 Main Street, Mumbai, Maharashtra 400001",
+        address:
+          user?.addresses?.[0]?.address ||
+          "123 Main Street, Mumbai, Maharashtra 400001",
       },
       paymentMethod: "Online Payment",
       estimatedDelivery,
       transactionId,
-    }
+    };
 
-    setOrderData(newOrderData)
-    clearCart()
-    setCheckoutStep(1)
-    setShowOrderConfirmation(true)
-    setIsPaymentOpen(false)
+    setOrderData(newOrderData);
+    clearCart();
+    setCheckoutStep(1);
+    setShowOrderConfirmation(true);
+    setIsPaymentOpen(false);
 
     addToast({
       type: "success",
       title: "Order Placed Successfully! 🎉",
       description: `Your order #${orderId} has been confirmed.`,
       duration: 5000,
-    })
-  }
+    });
+  };
 
   const handlePaymentFailure = (error: string) => {
     addToast({
@@ -496,8 +620,8 @@ function EliteCartIndiaContent() {
       title: "Payment Failed",
       description: error,
       duration: 5000,
-    })
-  }
+    });
+  };
 
   // Don't render until cart is loaded from localStorage
   if (!isLoaded) {
@@ -508,7 +632,7 @@ function EliteCartIndiaContent() {
           <p className="text-gray-600">Loading EliteCart...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Show order confirmation page
@@ -518,19 +642,20 @@ function EliteCartIndiaContent() {
         orderData={orderData}
         formatPrice={formatPrice}
         onContinueShopping={() => {
-          setShowOrderConfirmation(false)
-          setOrderData(null)
-          scrollToSection("home")
+          setShowOrderConfirmation(false);
+          setOrderData(null);
+          scrollToSection("home");
         }}
       />
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Top Banner */}
       <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-2 text-sm font-medium">
-        🚚 Free delivery across India on orders above ₹999 | 📞 24/7 Customer Support
+        🚚 Free delivery across India on orders above ₹999 | 📞 24/7 Customer
+        Support
       </div>
 
       {/* Header */}
@@ -538,7 +663,10 @@ function EliteCartIndiaContent() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center space-x-2 cursor-pointer" onClick={() => scrollToSection("home")}>
+            <div
+              className="flex items-center space-x-2 cursor-pointer"
+              onClick={() => scrollToSection("home")}
+            >
               <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">E</span>
               </div>
@@ -566,7 +694,9 @@ function EliteCartIndiaContent() {
                     key={item.name}
                     onClick={() => scrollToSection(item.href.substring(1))}
                     className={`font-medium transition-colors hover:text-orange-600 ${
-                      activeSection === item.href.substring(1) ? "text-orange-600" : "text-gray-700"
+                      activeSection === item.href.substring(1)
+                        ? "text-orange-600"
+                        : "text-gray-700"
                     }`}
                   >
                     {item.name}
@@ -599,7 +729,9 @@ function EliteCartIndiaContent() {
                       {navItems.map((item) => (
                         <button
                           key={item.name}
-                          onClick={() => scrollToSection(item.href.substring(1))}
+                          onClick={() =>
+                            scrollToSection(item.href.substring(1))
+                          }
                           className="block w-full text-left px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors"
                         >
                           {item.name}
@@ -617,15 +749,17 @@ function EliteCartIndiaContent() {
                   className="relative hover:bg-orange-50"
                   onClick={() => {
                     if (isAuthenticated) {
-                      setIsProfileOpen(true)
+                      setIsProfileOpen(true);
                     } else {
-                      setIsLoginOpen(true)
+                      setIsLoginOpen(true);
                     }
                   }}
                 >
                   {user ? (
                     <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-sm font-bold">{user.name.charAt(0).toUpperCase()}</span>
+                      <span className="text-white text-sm font-bold">
+                        {user.name.charAt(0).toUpperCase()}
+                      </span>
                     </div>
                   ) : (
                     <User className="w-5 h-5" />
@@ -640,14 +774,15 @@ function EliteCartIndiaContent() {
                       addToast({
                         type: "info",
                         title: "Wishlist is Empty",
-                        description: "Add some products to your wishlist to see them here.",
-                      })
+                        description:
+                          "Add some products to your wishlist to see them here.",
+                      });
                     } else {
                       addToast({
                         type: "info",
                         title: "Wishlist",
                         description: `You have ${wishlist.length} items in your wishlist.`,
-                      })
+                      });
                     }
                   }}
                 >
@@ -686,8 +821,12 @@ function EliteCartIndiaContent() {
           <div className="container mx-auto px-4 h-full flex items-center">
             <div className="grid md:grid-cols-2 gap-8 items-center w-full">
               <div className="text-white space-y-6 animate-fade-in">
-                <h1 className="text-4xl md:text-6xl font-bold leading-tight">{heroSlides[currentSlide].title}</h1>
-                <p className="text-xl md:text-2xl text-orange-200">{heroSlides[currentSlide].subtitle}</p>
+                <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                  {heroSlides[currentSlide].title}
+                </h1>
+                <p className="text-xl md:text-2xl text-orange-200">
+                  {heroSlides[currentSlide].subtitle}
+                </p>
                 <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                   <Button
                     size="lg"
@@ -724,7 +863,9 @@ function EliteCartIndiaContent() {
           {heroSlides.map((_, index) => (
             <button
               key={index}
-              className={`w-3 h-3 rounded-full transition-all ${index === currentSlide ? "bg-white" : "bg-white/50"}`}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentSlide ? "bg-white" : "bg-white/50"
+              }`}
               onClick={() => setCurrentSlide(index)}
             />
           ))}
@@ -734,7 +875,9 @@ function EliteCartIndiaContent() {
       {/* Categories Section */}
       <section id="categories" className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Shop by Category</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+            Shop by Category
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-9 gap-4">
             {categories.map((category) => (
               <Card
@@ -745,14 +888,20 @@ function EliteCartIndiaContent() {
                     : "bg-gradient-to-br from-white to-orange-50"
                 }`}
                 onClick={() => {
-                  setSelectedCategory(category.name)
-                  scrollToSection("products")
+                  setSelectedCategory(category.name);
+                  scrollToSection("products");
                 }}
               >
                 <CardContent className="p-4 text-center">
-                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">{category.icon}</div>
-                  <h3 className="font-semibold text-gray-800 mb-1 text-sm">{category.name}</h3>
-                  <p className="text-xs text-gray-600">{category.count} items</p>
+                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">
+                    {category.icon}
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1 text-sm">
+                    {category.name}
+                  </h3>
+                  <p className="text-xs text-gray-600">
+                    {category.count} items
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -761,14 +910,20 @@ function EliteCartIndiaContent() {
       </section>
 
       {/* Products Section */}
-      <section id="products" className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+      <section
+        id="products"
+        className="py-16 bg-gradient-to-br from-gray-50 to-blue-50"
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Mobile Filters Button */}
             <div className="lg:hidden">
               <Sheet open={showFilters} onOpenChange={setShowFilters}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className="w-full mb-4 bg-transparent">
+                  <Button
+                    variant="outline"
+                    className="w-full mb-4 bg-transparent"
+                  >
                     <Filter className="w-4 h-4 mr-2" />
                     Filters & Sort
                   </Button>
@@ -820,11 +975,19 @@ function EliteCartIndiaContent() {
               {/* Toolbar */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <div className="flex items-center space-x-4">
-                  <span className="text-gray-700 font-medium">{filteredProducts.length} Products Found</span>
+                  <span className="text-gray-700 font-medium">
+                    {filteredProducts.length} Products Found
+                  </span>
                   {selectedCategory !== "All" && (
-                    <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                    <Badge
+                      variant="secondary"
+                      className="bg-orange-100 text-orange-800"
+                    >
                       {selectedCategory}
-                      <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => setSelectedCategory("All")} />
+                      <X
+                        className="w-3 h-3 ml-1 cursor-pointer"
+                        onClick={() => setSelectedCategory("All")}
+                      />
                     </Badge>
                   )}
                 </div>
@@ -836,7 +999,9 @@ function EliteCartIndiaContent() {
                       variant={viewMode === "grid" ? "default" : "ghost"}
                       size="sm"
                       onClick={() => setViewMode("grid")}
-                      className={viewMode === "grid" ? "bg-orange-500 text-white" : ""}
+                      className={
+                        viewMode === "grid" ? "bg-orange-500 text-white" : ""
+                      }
                     >
                       <Grid className="w-4 h-4" />
                     </Button>
@@ -844,7 +1009,9 @@ function EliteCartIndiaContent() {
                       variant={viewMode === "list" ? "default" : "ghost"}
                       size="sm"
                       onClick={() => setViewMode("list")}
-                      className={viewMode === "list" ? "bg-orange-500 text-white" : ""}
+                      className={
+                        viewMode === "list" ? "bg-orange-500 text-white" : ""
+                      }
                     >
                       <List className="w-4 h-4" />
                     </Button>
@@ -857,8 +1024,12 @@ function EliteCartIndiaContent() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="featured">Featured</SelectItem>
-                      <SelectItem value="price-low">Price: Low to High</SelectItem>
-                      <SelectItem value="price-high">Price: High to Low</SelectItem>
+                      <SelectItem value="price-low">
+                        Price: Low to High
+                      </SelectItem>
+                      <SelectItem value="price-high">
+                        Price: High to Low
+                      </SelectItem>
                       <SelectItem value="rating">Top Rated</SelectItem>
                       <SelectItem value="newest">Newest</SelectItem>
                     </SelectContent>
@@ -891,9 +1062,16 @@ function EliteCartIndiaContent() {
               {filteredProducts.length === 0 && (
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">No products found</h3>
-                  <p className="text-gray-600 mb-4">Try adjusting your filters or search terms</p>
-                  <Button onClick={clearFilters} className="bg-orange-500 hover:bg-orange-600">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    No products found
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Try adjusting your filters or search terms
+                  </p>
+                  <Button
+                    onClick={clearFilters}
+                    className="bg-orange-500 hover:bg-orange-600"
+                  >
                     Clear All Filters
                   </Button>
                 </div>
@@ -906,7 +1084,9 @@ function EliteCartIndiaContent() {
       {/* Featured Products */}
       <section id="offers" className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Trending Now</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+            Trending Now
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {products.slice(0, 8).map((product) => (
               <Card
@@ -923,33 +1103,43 @@ function EliteCartIndiaContent() {
                       height={200}
                       className="w-full h-48 object-cover rounded-t-lg group-hover:scale-110 transition-transform duration-500"
                     />
-                    <Badge className="absolute top-2 left-2 bg-red-500 text-white">{product.discount}% OFF</Badge>
+                    <Badge className="absolute top-2 left-2 bg-red-500 text-white">
+                      {product.discount}% OFF
+                    </Badge>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="absolute top-2 right-2 bg-white/80 hover:bg-white"
                       onClick={(e) => {
-                        e.stopPropagation()
-                        toggleWishlist(product.id)
+                        e.stopPropagation();
+                        toggleWishlist(product.id);
                       }}
                     >
                       <Heart
                         className={`w-4 h-4 ${
-                          wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-600"
+                          wishlist.includes(product.id)
+                            ? "fill-red-500 text-red-500"
+                            : "text-gray-600"
                         }`}
                       />
                     </Button>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">{product.name}</h3>
+                    <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">
+                      {product.name}
+                    </h3>
                     <div className="flex items-center space-x-2 mb-3">
-                      <span className="text-lg font-bold text-gray-900">{formatPrice(product.price)}</span>
-                      <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
+                      <span className="text-lg font-bold text-gray-900">
+                        {formatPrice(product.price)}
+                      </span>
+                      <span className="text-sm text-gray-500 line-through">
+                        {formatPrice(product.originalPrice)}
+                      </span>
                     </div>
                     <Button
                       onClick={(e) => {
-                        e.stopPropagation()
-                        addToCart(product)
+                        e.stopPropagation();
+                        addToCart(product);
                       }}
                       size="sm"
                       className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
@@ -965,29 +1155,42 @@ function EliteCartIndiaContent() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+      <section
+        id="about"
+        className="py-16 bg-gradient-to-br from-gray-50 to-blue-50"
+      >
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-8 text-gray-800">About EliteCart India</h2>
+          <h2 className="text-3xl font-bold mb-8 text-gray-800">
+            About EliteCart India
+          </h2>
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-gray-600 mb-8">
-              EliteCart India is your premium destination for electronics, gadgets, and lifestyle products. We bring you
-              the latest technology at unbeatable prices with guaranteed authenticity and exceptional customer service.
+              EliteCart India is your premium destination for electronics,
+              gadgets, and lifestyle products. We bring you the latest
+              technology at unbeatable prices with guaranteed authenticity and
+              exceptional customer service.
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="text-4xl mb-4">🚚</div>
                 <h3 className="font-semibold mb-2">Free Delivery</h3>
-                <p className="text-gray-600">Free shipping across India on orders above ₹999</p>
+                <p className="text-gray-600">
+                  Free shipping across India on orders above ₹999
+                </p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">🔒</div>
                 <h3 className="font-semibold mb-2">Secure Payments</h3>
-                <p className="text-gray-600">Multiple payment options with bank-level security</p>
+                <p className="text-gray-600">
+                  Multiple payment options with bank-level security
+                </p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">⭐</div>
                 <h3 className="font-semibold mb-2">Quality Assured</h3>
-                <p className="text-gray-600">100% authentic products with warranty</p>
+                <p className="text-gray-600">
+                  100% authentic products with warranty
+                </p>
               </div>
             </div>
           </div>
@@ -997,7 +1200,9 @@ function EliteCartIndiaContent() {
       {/* Contact Section */}
       <section id="contact" className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Contact Us</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+            Contact Us
+          </h2>
           <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
             <div>
               <h3 className="text-xl font-semibold mb-6">Get in Touch</h3>
@@ -1025,7 +1230,8 @@ function EliteCartIndiaContent() {
             <div>
               <h3 className="text-xl font-semibold mb-6">Customer Support</h3>
               <p className="text-gray-600 mb-4">
-                Our customer support team is available 24/7 to help you with any queries or concerns.
+                Our customer support team is available 24/7 to help you with any
+                queries or concerns.
               </p>
               <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
                 Chat with Support
@@ -1047,7 +1253,8 @@ function EliteCartIndiaContent() {
                 <span className="text-xl font-bold">EliteCart</span>
               </div>
               <p className="text-gray-300 mb-4">
-                India's premium shopping destination for electronics, fashion, and lifestyle products.
+                India's premium shopping destination for electronics, fashion,
+                and lifestyle products.
               </p>
               <div className="flex items-center space-x-2">
                 <span className="text-orange-400">🇮🇳</span>
@@ -1059,13 +1266,19 @@ function EliteCartIndiaContent() {
               <h4 className="font-semibold mb-4">Customer Care</h4>
               <ul className="space-y-2 text-gray-300">
                 <li>
-                  <button className="hover:text-orange-400 transition-colors text-left">Help Center</button>
+                  <button className="hover:text-orange-400 transition-colors text-left">
+                    Help Center
+                  </button>
                 </li>
                 <li>
-                  <button className="hover:text-orange-400 transition-colors text-left">Track Your Order</button>
+                  <button className="hover:text-orange-400 transition-colors text-left">
+                    Track Your Order
+                  </button>
                 </li>
                 <li>
-                  <button className="hover:text-orange-400 transition-colors text-left">Returns & Refunds</button>
+                  <button className="hover:text-orange-400 transition-colors text-left">
+                    Returns & Refunds
+                  </button>
                 </li>
                 <li>
                   <button
@@ -1090,13 +1303,19 @@ function EliteCartIndiaContent() {
                   </button>
                 </li>
                 <li>
-                  <button className="hover:text-orange-400 transition-colors text-left">Careers</button>
+                  <button className="hover:text-orange-400 transition-colors text-left">
+                    Careers
+                  </button>
                 </li>
                 <li>
-                  <button className="hover:text-orange-400 transition-colors text-left">Privacy Policy</button>
+                  <button className="hover:text-orange-400 transition-colors text-left">
+                    Privacy Policy
+                  </button>
                 </li>
                 <li>
-                  <button className="hover:text-orange-400 transition-colors text-left">Terms of Service</button>
+                  <button className="hover:text-orange-400 transition-colors text-left">
+                    Terms of Service
+                  </button>
                 </li>
               </ul>
             </div>
@@ -1117,9 +1336,15 @@ function EliteCartIndiaContent() {
               <div className="text-sm text-gray-300">
                 <p className="mb-2">Payment Methods:</p>
                 <div className="flex space-x-2">
-                  <span className="bg-white text-gray-800 px-2 py-1 rounded text-xs">UPI</span>
-                  <span className="bg-white text-gray-800 px-2 py-1 rounded text-xs">Visa</span>
-                  <span className="bg-white text-gray-800 px-2 py-1 rounded text-xs">RuPay</span>
+                  <span className="bg-white text-gray-800 px-2 py-1 rounded text-xs">
+                    UPI
+                  </span>
+                  <span className="bg-white text-gray-800 px-2 py-1 rounded text-xs">
+                    Visa
+                  </span>
+                  <span className="bg-white text-gray-800 px-2 py-1 rounded text-xs">
+                    RuPay
+                  </span>
                 </div>
               </div>
             </div>
@@ -1128,7 +1353,10 @@ function EliteCartIndiaContent() {
           <Separator className="my-8 bg-gray-700" />
 
           <div className="text-center text-gray-400 text-sm">
-            <p>&copy; 2024 EliteCart India. All rights reserved. | Designed with ❤️ for India</p>
+            <p>
+              &copy; 2025 EliteCart India. All rights reserved. | Designed with
+              ❤️ for India
+            </p>
           </div>
         </div>
       </footer>
@@ -1138,7 +1366,8 @@ function EliteCartIndiaContent() {
         <SheetContent className="w-full sm:max-w-lg bg-white/95 backdrop-blur-md">
           <SheetHeader>
             <SheetTitle className="text-xl font-bold text-gray-800">
-              Shopping Cart ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items)
+              Shopping Cart (
+              {cartItems.reduce((sum, item) => sum + item.quantity, 0)} items)
             </SheetTitle>
           </SheetHeader>
 
@@ -1146,9 +1375,16 @@ function EliteCartIndiaContent() {
             {cartItems.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <div className="text-6xl mb-4">🛒</div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Your cart is empty</h3>
-                <p className="text-gray-600 mb-4">Add some products to get started!</p>
-                <Button onClick={() => setIsCartOpen(false)} className="bg-orange-500 hover:bg-orange-600">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Your cart is empty
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Add some products to get started!
+                </p>
+                <Button
+                  onClick={() => setIsCartOpen(false)}
+                  className="bg-orange-500 hover:bg-orange-600"
+                >
                   Continue Shopping
                 </Button>
               </div>
@@ -1169,24 +1405,34 @@ function EliteCartIndiaContent() {
                           className="rounded-lg object-cover"
                         />
                         <div className="flex-1">
-                          <h4 className="font-medium text-gray-800 text-sm">{item.name}</h4>
-                          <p className="text-orange-600 font-semibold">{formatPrice(item.price)}</p>
+                          <h4 className="font-medium text-gray-800 text-sm">
+                            {item.name}
+                          </h4>
+                          <p className="text-orange-600 font-semibold">
+                            {formatPrice(item.price)}
+                          </p>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Button
                             variant="outline"
                             size="icon"
                             className="w-8 h-8 bg-transparent"
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
                           >
                             <Minus className="w-3 h-3" />
                           </Button>
-                          <span className="w-8 text-center font-medium">{item.quantity}</span>
+                          <span className="w-8 text-center font-medium">
+                            {item.quantity}
+                          </span>
                           <Button
                             variant="outline"
                             size="icon"
                             className="w-8 h-8 bg-transparent"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
                           >
                             <Plus className="w-3 h-3" />
                           </Button>
@@ -1216,24 +1462,34 @@ function EliteCartIndiaContent() {
                     </div>
                     <div className="flex justify-between">
                       <span>Delivery:</span>
-                      <span>{deliveryCharges === 0 ? "FREE" : formatPrice(deliveryCharges)}</span>
+                      <span>
+                        {deliveryCharges === 0
+                          ? "FREE"
+                          : formatPrice(deliveryCharges)}
+                      </span>
                     </div>
                     <Separator />
                     <div className="flex justify-between font-semibold text-lg">
                       <span>Total:</span>
-                      <span className="text-orange-600">{formatPrice(finalTotal)}</span>
+                      <span className="text-orange-600">
+                        {formatPrice(finalTotal)}
+                      </span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Button variant="outline" className="w-full bg-transparent" onClick={() => setIsCartOpen(false)}>
+                    <Button
+                      variant="outline"
+                      className="w-full bg-transparent"
+                      onClick={() => setIsCartOpen(false)}
+                    >
                       Continue Shopping
                     </Button>
                     <Button
                       className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                       onClick={() => {
-                        setIsCartOpen(false)
-                        setIsCheckoutOpen(true)
+                        setIsCartOpen(false);
+                        setIsCheckoutOpen(true);
                       }}
                     >
                       Proceed to Checkout
@@ -1252,7 +1508,9 @@ function EliteCartIndiaContent() {
           {selectedProduct && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-2xl font-bold text-gray-800">{selectedProduct.name}</DialogTitle>
+                <DialogTitle className="text-2xl font-bold text-gray-800">
+                  {selectedProduct.name}
+                </DialogTitle>
               </DialogHeader>
 
               <div className="grid md:grid-cols-2 gap-8">
@@ -1276,31 +1534,44 @@ function EliteCartIndiaContent() {
                         <Star
                           key={i}
                           className={`w-5 h-5 ${
-                            i < Math.floor(selectedProduct.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                            i < Math.floor(selectedProduct.rating)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
                           }`}
                         />
                       ))}
-                      <span className="ml-2 text-gray-600">({selectedProduct.reviews} reviews)</span>
+                      <span className="ml-2 text-gray-600">
+                        ({selectedProduct.reviews} reviews)
+                      </span>
                     </div>
 
                     <div className="flex items-center space-x-4 mb-4">
-                      <span className="text-3xl font-bold text-gray-900">{formatPrice(selectedProduct.price)}</span>
+                      <span className="text-3xl font-bold text-gray-900">
+                        {formatPrice(selectedProduct.price)}
+                      </span>
                       <span className="text-xl text-gray-500 line-through">
                         {formatPrice(selectedProduct.originalPrice)}
                       </span>
                     </div>
 
-                    <p className="text-gray-600 mb-4">{selectedProduct.description}</p>
+                    <p className="text-gray-600 mb-4">
+                      {selectedProduct.description}
+                    </p>
 
                     <div className="mb-6">
                       <h4 className="font-semibold mb-2">Key Features:</h4>
                       <ul className="space-y-1">
-                        {selectedProduct.features?.map((feature: string, index: number) => (
-                          <li key={index} className="flex items-center text-sm text-gray-600">
-                            <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-                            {feature}
-                          </li>
-                        ))}
+                        {selectedProduct.features?.map(
+                          (feature: string, index: number) => (
+                            <li
+                              key={index}
+                              className="flex items-center text-sm text-gray-600"
+                            >
+                              <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                              {feature}
+                            </li>
+                          )
+                        )}
                       </ul>
                     </div>
                   </div>
@@ -1308,8 +1579,8 @@ function EliteCartIndiaContent() {
                   <div className="space-y-3">
                     <Button
                       onClick={() => {
-                        addToCart(selectedProduct)
-                        setIsProductModalOpen(false)
+                        addToCart(selectedProduct);
+                        setIsProductModalOpen(false);
                       }}
                       className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3"
                     >
@@ -1322,9 +1593,15 @@ function EliteCartIndiaContent() {
                       className="w-full border-orange-300 text-orange-600 hover:bg-orange-50"
                     >
                       <Heart
-                        className={`w-4 h-4 mr-2 ${wishlist.includes(selectedProduct.id) ? "fill-current" : ""}`}
+                        className={`w-4 h-4 mr-2 ${
+                          wishlist.includes(selectedProduct.id)
+                            ? "fill-current"
+                            : ""
+                        }`}
                       />
-                      {wishlist.includes(selectedProduct.id) ? "Remove from Wishlist" : "Add to Wishlist"}
+                      {wishlist.includes(selectedProduct.id)
+                        ? "Remove from Wishlist"
+                        : "Add to Wishlist"}
                     </Button>
                   </div>
                 </div>
@@ -1358,7 +1635,7 @@ function EliteCartIndiaContent() {
             type: "info",
             title: "WhatsApp Support",
             description: "WhatsApp support feature coming soon!",
-          })
+          });
         }}
       >
         <span className="text-2xl">💬</span>
@@ -1369,8 +1646,8 @@ function EliteCartIndiaContent() {
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
         onSwitchToRegister={() => {
-          setIsLoginOpen(false)
-          setIsRegisterOpen(true)
+          setIsLoginOpen(false);
+          setIsRegisterOpen(true);
         }}
       />
 
@@ -1378,12 +1655,15 @@ function EliteCartIndiaContent() {
         isOpen={isRegisterOpen}
         onClose={() => setIsRegisterOpen(false)}
         onSwitchToLogin={() => {
-          setIsRegisterOpen(false)
-          setIsLoginOpen(true)
+          setIsRegisterOpen(false);
+          setIsLoginOpen(true);
         }}
       />
 
-      <UserProfile isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+      <UserProfile
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+      />
 
       {/* Payment Gateway */}
       {paymentDetails && (
@@ -1397,9 +1677,12 @@ function EliteCartIndiaContent() {
       )}
 
       {/* Payment History */}
-      <PaymentHistory isOpen={isPaymentHistoryOpen} onClose={() => setIsPaymentHistoryOpen(false)} />
+      <PaymentHistory
+        isOpen={isPaymentHistoryOpen}
+        onClose={() => setIsPaymentHistoryOpen(false)}
+      />
     </div>
-  )
+  );
 }
 
 // Filters Component
@@ -1420,7 +1703,12 @@ function FiltersContent({
     <>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-800">Filters</h3>
-        <Button variant="ghost" size="sm" onClick={clearFilters} className="text-orange-600 hover:text-orange-700">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearFilters}
+          className="text-orange-600 hover:text-orange-700"
+        >
           Clear All
         </Button>
       </div>
@@ -1428,8 +1716,17 @@ function FiltersContent({
       <div className="space-y-6">
         {/* Price Range */}
         <div>
-          <Label className="text-sm font-medium text-gray-700 mb-3 block">Price Range</Label>
-          <Slider value={priceRange} onValueChange={setPriceRange} max={50000} min={500} step={500} className="mb-2" />
+          <Label className="text-sm font-medium text-gray-700 mb-3 block">
+            Price Range
+          </Label>
+          <Slider
+            value={priceRange}
+            onValueChange={setPriceRange}
+            max={50000}
+            min={500}
+            step={500}
+            className="mb-2"
+          />
           <div className="flex justify-between text-sm text-gray-600">
             <span>{formatPrice(priceRange[0])}</span>
             <span>{formatPrice(priceRange[1])}</span>
@@ -1438,7 +1735,9 @@ function FiltersContent({
 
         {/* Brands */}
         <div>
-          <Label className="text-sm font-medium text-gray-700 mb-3 block">Brands</Label>
+          <Label className="text-sm font-medium text-gray-700 mb-3 block">
+            Brands
+          </Label>
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {brands.map((brand: string) => (
               <div key={brand} className="flex items-center space-x-2">
@@ -1447,9 +1746,11 @@ function FiltersContent({
                   checked={selectedBrands.includes(brand)}
                   onCheckedChange={(checked) => {
                     if (checked) {
-                      setSelectedBrands([...selectedBrands, brand])
+                      setSelectedBrands([...selectedBrands, brand]);
                     } else {
-                      setSelectedBrands(selectedBrands.filter((b: string) => b !== brand))
+                      setSelectedBrands(
+                        selectedBrands.filter((b: string) => b !== brand)
+                      );
                     }
                   }}
                 />
@@ -1463,7 +1764,9 @@ function FiltersContent({
 
         {/* Rating */}
         <div>
-          <Label className="text-sm font-medium text-gray-700 mb-3 block">Minimum Rating</Label>
+          <Label className="text-sm font-medium text-gray-700 mb-3 block">
+            Minimum Rating
+          </Label>
           <div className="space-y-2">
             {[4, 3, 2, 1].map((rating) => (
               <div key={rating} className="flex items-center space-x-2">
@@ -1475,9 +1778,15 @@ function FiltersContent({
                   onChange={() => setMinRating(rating)}
                   className="text-orange-500"
                 />
-                <Label htmlFor={`rating-${rating}`} className="flex items-center text-sm text-gray-700">
+                <Label
+                  htmlFor={`rating-${rating}`}
+                  className="flex items-center text-sm text-gray-700"
+                >
                   {Array.from({ length: rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <Star
+                      key={i}
+                      className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                   <span className="ml-1">& above</span>
                 </Label>
@@ -1488,18 +1797,30 @@ function FiltersContent({
 
         {/* In Stock */}
         <div className="flex items-center space-x-2">
-          <Checkbox id="inStock" checked={inStockOnly} onCheckedChange={setInStockOnly} />
+          <Checkbox
+            id="inStock"
+            checked={inStockOnly}
+            onCheckedChange={setInStockOnly}
+          />
           <Label htmlFor="inStock" className="text-sm text-gray-700">
             In Stock Only
           </Label>
         </div>
       </div>
     </>
-  )
+  );
 }
 
 // Product Card Component
-function ProductCard({ product, viewMode, wishlist, toggleWishlist, addToCart, formatPrice, openProductModal }: any) {
+function ProductCard({
+  product,
+  viewMode,
+  wishlist,
+  toggleWishlist,
+  addToCart,
+  formatPrice,
+  openProductModal,
+}: any) {
   return (
     <Card
       className={`group cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm border-orange-100 ${
@@ -1507,8 +1828,12 @@ function ProductCard({ product, viewMode, wishlist, toggleWishlist, addToCart, f
       }`}
       onClick={() => openProductModal(product)}
     >
-      <CardContent className={`p-0 ${viewMode === "list" ? "flex w-full" : ""}`}>
-        <div className={viewMode === "list" ? "w-48 flex-shrink-0" : "relative"}>
+      <CardContent
+        className={`p-0 ${viewMode === "list" ? "flex w-full" : ""}`}
+      >
+        <div
+          className={viewMode === "list" ? "w-48 flex-shrink-0" : "relative"}
+        >
           <Image
             src={product.image || "/placeholder.svg"}
             alt={product.name}
@@ -1518,49 +1843,73 @@ function ProductCard({ product, viewMode, wishlist, toggleWishlist, addToCart, f
               viewMode === "list" ? "h-48" : "h-64 rounded-t-lg"
             }`}
           />
-          <Badge className="absolute top-2 left-2 bg-red-500 text-white">{product.discount}% OFF</Badge>
+          <Badge className="absolute top-2 left-2 bg-red-500 text-white">
+            {product.discount}% OFF
+          </Badge>
           <Button
             variant="ghost"
             size="icon"
             className="absolute top-2 right-2 bg-white/80 hover:bg-white"
             onClick={(e) => {
-              e.stopPropagation()
-              toggleWishlist(product.id)
+              e.stopPropagation();
+              toggleWishlist(product.id);
             }}
           >
             <Heart
-              className={`w-4 h-4 ${wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`}
+              className={`w-4 h-4 ${
+                wishlist.includes(product.id)
+                  ? "fill-red-500 text-red-500"
+                  : "text-gray-600"
+              }`}
             />
           </Button>
         </div>
 
-        <div className={`p-4 ${viewMode === "list" ? "flex-1 flex flex-col justify-between" : ""}`}>
+        <div
+          className={`p-4 ${
+            viewMode === "list" ? "flex-1 flex flex-col justify-between" : ""
+          }`}
+        >
           <div>
-            <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">{product.name}</h3>
+            <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">
+              {product.name}
+            </h3>
             <div className="flex items-center mb-2">
               <div className="flex items-center">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
                     className={`w-4 h-4 ${
-                      i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                      i < Math.floor(product.rating)
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "text-gray-300"
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-gray-600 ml-2">({product.reviews})</span>
+              <span className="text-sm text-gray-600 ml-2">
+                ({product.reviews})
+              </span>
             </div>
             <div className="flex items-center space-x-2 mb-3">
-              <span className="text-xl font-bold text-gray-900">{formatPrice(product.price)}</span>
-              <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
+              <span className="text-xl font-bold text-gray-900">
+                {formatPrice(product.price)}
+              </span>
+              <span className="text-sm text-gray-500 line-through">
+                {formatPrice(product.originalPrice)}
+              </span>
             </div>
-            {viewMode === "list" && <p className="text-sm text-gray-600 mb-3">{product.description}</p>}
+            {viewMode === "list" && (
+              <p className="text-sm text-gray-600 mb-3">
+                {product.description}
+              </p>
+            )}
           </div>
 
           <Button
             onClick={(e) => {
-              e.stopPropagation()
-              addToCart(product)
+              e.stopPropagation();
+              addToCart(product);
             }}
             className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-2 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
@@ -1569,7 +1918,7 @@ function ProductCard({ product, viewMode, wishlist, toggleWishlist, addToCart, f
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // Checkout Dialog Component
@@ -1590,7 +1939,9 @@ function CheckoutDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-gray-800">Checkout</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-800">
+            Checkout
+          </DialogTitle>
         </DialogHeader>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -1601,18 +1952,28 @@ function CheckoutDialog({
                 <div key={step} className="flex items-center">
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                      step <= checkoutStep ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-600"
+                      step <= checkoutStep
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-200 text-gray-600"
                     }`}
                   >
                     {step}
                   </div>
                   <span
-                    className={`ml-2 text-sm ${step <= checkoutStep ? "text-orange-600 font-medium" : "text-gray-500"}`}
+                    className={`ml-2 text-sm ${
+                      step <= checkoutStep
+                        ? "text-orange-600 font-medium"
+                        : "text-gray-500"
+                    }`}
                   >
                     {step === 1 ? "Address" : step === 2 ? "Payment" : "Review"}
                   </span>
                   {step < 3 && (
-                    <div className={`w-16 h-0.5 mx-4 ${step < checkoutStep ? "bg-orange-500" : "bg-gray-200"}`} />
+                    <div
+                      className={`w-16 h-0.5 mx-4 ${
+                        step < checkoutStep ? "bg-orange-500" : "bg-gray-200"
+                      }`}
+                    />
                   )}
                 </div>
               ))}
@@ -1632,7 +1993,10 @@ function CheckoutDialog({
                   </div>
                   <div className="col-span-2">
                     <Label htmlFor="address">Address</Label>
-                    <Input id="address" placeholder="House No, Building, Street, Area" />
+                    <Input
+                      id="address"
+                      placeholder="House No, Building, Street, Area"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="city">City</Label>
@@ -1657,7 +2021,10 @@ function CheckoutDialog({
                     <Input id="pincode" placeholder="6-digit pincode" />
                   </div>
                 </div>
-                <Button onClick={() => setCheckoutStep(2)} className="w-full bg-orange-500 hover:bg-orange-600">
+                <Button
+                  onClick={() => setCheckoutStep(2)}
+                  className="w-full bg-orange-500 hover:bg-orange-600"
+                >
                   Continue to Payment
                 </Button>
               </TabsContent>
@@ -1670,37 +2037,52 @@ function CheckoutDialog({
                       <RadioGroupItem value="upi" id="upi" />
                       <Label htmlFor="upi" className="flex-1">
                         <div className="font-medium">UPI Payment</div>
-                        <div className="text-sm text-gray-600">PhonePe, Google Pay, Paytm</div>
+                        <div className="text-sm text-gray-600">
+                          PhonePe, Google Pay, Paytm
+                        </div>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 p-4 border rounded-lg">
                       <RadioGroupItem value="card" id="card" />
                       <Label htmlFor="card" className="flex-1">
                         <div className="font-medium">Credit/Debit Card</div>
-                        <div className="text-sm text-gray-600">Visa, Mastercard, RuPay</div>
+                        <div className="text-sm text-gray-600">
+                          Visa, Mastercard, RuPay
+                        </div>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 p-4 border rounded-lg">
                       <RadioGroupItem value="cod" id="cod" />
                       <Label htmlFor="cod" className="flex-1">
                         <div className="font-medium">Cash on Delivery</div>
-                        <div className="text-sm text-gray-600">Pay when you receive</div>
+                        <div className="text-sm text-gray-600">
+                          Pay when you receive
+                        </div>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 p-4 border rounded-lg">
                       <RadioGroupItem value="netbanking" id="netbanking" />
                       <Label htmlFor="netbanking" className="flex-1">
                         <div className="font-medium">Net Banking</div>
-                        <div className="text-sm text-gray-600">All major banks supported</div>
+                        <div className="text-sm text-gray-600">
+                          All major banks supported
+                        </div>
                       </Label>
                     </div>
                   </div>
                 </RadioGroup>
                 <div className="flex space-x-4">
-                  <Button variant="outline" onClick={() => setCheckoutStep(1)} className="flex-1">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCheckoutStep(1)}
+                    className="flex-1"
+                  >
                     Back
                   </Button>
-                  <Button onClick={() => setCheckoutStep(3)} className="flex-1 bg-orange-500 hover:bg-orange-600">
+                  <Button
+                    onClick={() => setCheckoutStep(3)}
+                    className="flex-1 bg-orange-500 hover:bg-orange-600"
+                  >
                     Review Order
                   </Button>
                 </div>
@@ -1710,7 +2092,10 @@ function CheckoutDialog({
                 <h3 className="text-lg font-semibold mb-4">Order Review</h3>
                 <div className="space-y-4">
                   {cartItems.map((item: any) => (
-                    <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <div
+                      key={item.id}
+                      className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg"
+                    >
                       <Image
                         src={item.image || "/placeholder.svg"}
                         alt={item.name}
@@ -1720,14 +2105,22 @@ function CheckoutDialog({
                       />
                       <div className="flex-1">
                         <h4 className="font-medium">{item.name}</h4>
-                        <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                        <p className="text-sm text-gray-600">
+                          Qty: {item.quantity}
+                        </p>
                       </div>
-                      <span className="font-semibold">{formatPrice(item.price * item.quantity)}</span>
+                      <span className="font-semibold">
+                        {formatPrice(item.price * item.quantity)}
+                      </span>
                     </div>
                   ))}
                 </div>
                 <div className="flex space-x-4">
-                  <Button variant="outline" onClick={() => setCheckoutStep(2)} className="flex-1">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCheckoutStep(2)}
+                    className="flex-1"
+                  >
                     Back
                   </Button>
                   <Button
@@ -1746,7 +2139,14 @@ function CheckoutDialog({
             <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span>Items ({cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0)}):</span>
+                <span>
+                  Items (
+                  {cartItems.reduce(
+                    (sum: number, item: any) => sum + item.quantity,
+                    0
+                  )}
+                  ):
+                </span>
                 <span>{formatPrice(cartTotal)}</span>
               </div>
               <div className="flex justify-between">
@@ -1755,12 +2155,18 @@ function CheckoutDialog({
               </div>
               <div className="flex justify-between">
                 <span>Delivery Charges:</span>
-                <span>{deliveryCharges === 0 ? "FREE" : formatPrice(deliveryCharges)}</span>
+                <span>
+                  {deliveryCharges === 0
+                    ? "FREE"
+                    : formatPrice(deliveryCharges)}
+                </span>
               </div>
               <Separator className="my-2" />
               <div className="flex justify-between font-semibold text-lg">
                 <span>Total Amount:</span>
-                <span className="text-orange-600">{formatPrice(finalTotal)}</span>
+                <span className="text-orange-600">
+                  {formatPrice(finalTotal)}
+                </span>
               </div>
             </div>
             {cartTotal > 99900 && (
@@ -1772,7 +2178,7 @@ function CheckoutDialog({
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 export default function EliteCartIndia() {
@@ -1784,5 +2190,5 @@ export default function EliteCartIndia() {
         </PaymentProvider>
       </AuthProvider>
     </ToastProvider>
-  )
+  );
 }
