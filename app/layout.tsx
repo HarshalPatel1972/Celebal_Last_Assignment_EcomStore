@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "EliteCart India",
-  icon: "/icon.png",
+  icon: "/favicon.ico",
 };
 
 export default function RootLayout({
